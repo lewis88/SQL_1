@@ -1,0 +1,240 @@
+#------------------------------------------------------------------------------#
+#---------- Fringe Shows Homework ---------------------------------------------#
+#------------------------------------------------------------------------------#
+
+Section 1
+
+(1.1) Select the names of all users.
+
+fringe_shows=# SELECT * FROM users;
+ id |       name
+----+-------------------
+  1 | Rick Henry
+  2 | Jay Chetty
+  3 | Keith Douglas
+  4 | Valerie Gibson
+  5 | Steven Meiklejohn
+  6 | Zak Buys
+  7 | Harry Swan
+  8 | Henry Dashwood
+  9 | Seumus Blair
+ 10 | David MacKintosh
+ 11 | Allan Harrison
+ 12 | Chris Wood
+ 13 | Adam Pinner
+ 14 | Jeffrey Lloyd
+ 15 | Alistair MacKay
+ 16 | Andrew Craib
+ 17 | Rebecca Kelly
+ 18 | Hamish Edmondson
+ 19 | Wojciech Tartanus
+ 20 | Donald Lessels
+ 21 | Aidan Pinkman
+ 22 | Lewis Johnston
+(22 rows)
+
+#------------------------------------------------------------------------------#
+
+(1.2) Select the names of all shows that cost less than £15.
+
+fringe_shows=# SELECT name FROM shows WHERE price >= 15.00;
+                  name
+-----------------------------------------
+ Shitfaced Shakespeare
+ Camille O'Sullivan
+ Game of Thrones - The Musical
+ Joe Stilgoe: Songs on Film – The Sequel
+ Aaabeduation – A Magic Show
+ Edinburgh Royal Tattoo
+ Balletronics
+(7 rows)
+
+#------------------------------------------------------------------------------#
+
+(1.3) Insert a user with the name "Val Gibson" into the users table.
+
+fringe_shows=# INSERT INTO "users" (name) VALUES ('Val Gibson');
+INSERT 0 1
+
+#------------------------------------------------------------------------------#
+
+(1.4) Select the id of the user with your name.
+
+fringe_shows=# SELECT id FROM users WHERE name = 'Lewis Johnston';
+ id
+----
+ 22
+(1 row)
+
+#------------------------------------------------------------------------------#
+
+(1.5) Insert a record that Val Gibson wants to attend the show "Two girls, one cup of comedy".
+
+fringe_shows=# INSERT INTO "shows_users" (show_id, user_id) VALUES (12, 23);
+INSERT 0 1
+
+#------------------------------------------------------------------------------#
+
+(1.6) Updates the name of the "Val Gibson" user to be "Valerie Gibson".
+
+fringe_shows=# UPDATE users SET name='Valerie Gibson' WHERE name='Val Gibson';
+UPDATE 1
+
+#------------------------------------------------------------------------------#
+
+(1.7) Deletes the user with the name 'Valerie Gibson'.
+
+fringe_shows=# DELETE FROM users WHERE name = 'Valerie Gibson';
+DELETE 2
+
+#------------------------------------------------------------------------------#
+
+(1.8) Deletes the shows for the user you just deleted.
+
+fringe_shows=# DELETE FROM users WHERE name = 'Valerie Gibson';
+DELETE 0
+
+#------------------------------------------------------------------------------#
+
+Section 2
+
+This section involves more complex queries. You will need to go and find out about
+aggregate funcions in SQL to answer some of the next questions.
+
+(2.1) Select the names and prices of all shows, ordered by price in ascending order.
+
+fringe_shows=# SELECT name, price FROM shows ORDER BY price ASC;
+                  name                   | price
+-----------------------------------------+-------
+ Two girls, one cup of comedy            |  6.00
+ Best of Burlesque                       |  7.99
+ Two become One                          |  8.50
+ Urinetown                               |  8.50
+ Paul Dabek Mischief                     | 12.99
+ Le Haggis                               | 12.99
+ Joe Stilgoe: Songs on Film – The Sequel | 16.50
+ Game of Thrones - The Musical           | 16.50
+ Shitfaced Shakespeare                   | 16.50
+ Aaabeduation – A Magic Show             | 17.99
+ Camille O'Sullivan                      | 17.99
+ Balletronics                            | 32.00
+ Edinburgh Royal Tattoo                  | 32.99
+(13 rows)
+
+#------------------------------------------------------------------------------#
+
+(2.2) Select the average price of all shows.
+
+fringe_shows=# SELECT avg(price) FROM shows;
+         avg
+---------------------
+ 15.9569230769230769
+(1 row)
+
+#------------------------------------------------------------------------------#
+
+(2.3) Select the price of the least expensive show.
+
+fringe_shows-# SELECT min(price) FROM shows;
+ min
+------
+ 6.00
+(1 row)
+
+#------------------------------------------------------------------------------#
+
+(2.4) Select the sum of the price of all shows.
+
+fringe_shows=# SELECT sum(price) FROM shows;
+  sum
+--------
+ 207.44
+(1 row)
+
+#------------------------------------------------------------------------------#
+
+(2.5) Select the sum of the price of all shows whose prices is less than £20.
+
+fringe_shows=# SELECT sum(price) FROM shows WHERE price < 20.00;
+  sum
+--------
+ 142.45
+(1 row)
+
+#------------------------------------------------------------------------------#
+
+(2.6) Select the name and price of the most expensive show.
+
+fringe_shows=# SELECT name, price FROM shows WHERE price IN(SELECT max(price) FROM shows);
+          name          | price
+------------------------+-------
+ Edinburgh Royal Tattoo | 32.99
+(1 row)
+
+#------------------------------------------------------------------------------#
+
+(2.7) Select the name and price of the second from cheapest show.
+
+fringe_shows=# SELECT name, price FROM shows ORDER BY price ASC LIMIT 1 OFFSET 1;
+       name        | price
+-------------------+-------
+ Best of Burlesque |  7.99
+(1 row)
+
+#------------------------------------------------------------------------------#
+
+(2.8) Select the names of all users whose names start with the letter "A".
+
+fringe_shows=# SELECT name FROM users WHERE name LIKE 'A%';
+      name
+-----------------
+ Allan Harrison
+ Adam Pinner
+ Alistair MacKay
+ Andrew Craib
+ Aidan Pinkman
+(5 rows)
+
+#------------------------------------------------------------------------------#
+
+(2.9) Select the names of users whose names contain "el".
+
+fringe_shows=# SELECT name FROM users WHERE name LIKE '%el%';
+name
+----------------
+ Rebecca Kelly
+ Donald Lessels
+(2 rows)
+
+#------------------------------------------------------------------------------#
+
+Section 3
+
+The following questions can be answered by using nested SQL statements but ideally
+you should learn about JOIN clauses to answer them.
+
+(3.1) Select the time for the Edinburgh Royal Tattoo.
+
+fringe_shows=# SELECT time FROM times where id=8;
+ time
+-------
+ 22:00
+(1 row)
+
+#------------------------------------------------------------------------------#
+
+(3.2) Select the number of users who want to see "Le Haggis".
+
+SELECT COUNT(shows_users) FROM shows_users WHERE shows_users.show_id = 1;
+ count
+-------
+     2
+(1 row)
+
+#------------------------------------------------------------------------------#
+
+(3.3) Select all of the user names and the count of shows they're going to see.
+
+SELECT users, COUNT(shows_user)
+
+(3.4) SELECT all users who are going to a show at 13:30.
